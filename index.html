@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Honeycomb Moiré</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/dreampulse/computer-modern-web-font/master/fonts.css">
+  <link rel="stylesheet" href="styles.css">
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  </script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+</head>
+<body>
+  <div class="slideshow-container">
+    <div class="container">
+      <div class="header">
+        Honeycomb Moiré
+      </div>
+      <div class="content-large">
+        <canvas id="myChart"></canvas>
+      </div>
+
+      <div class="back"></div>
+
+      <div class="footer">
+        <div class="subfooderslider">
+          <input type="range" min="0" max="100" value="0" id="myRange" class="slider">
+        </div>
+        <div class="subfoodervalue">
+          <p>$\theta=$ <span id="value"></span>°</p>
+        </div>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="main.js"></script> 
+    </div>
+  </div>
+</body>
+</html>
