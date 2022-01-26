@@ -41,12 +41,12 @@ body {
   position: absolute;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
-  opacity: 1;
-  border-radius: 8px;
-  z-index: -1;
-  transition: all 0.5s ease;
-  top: -100%;
+  opacity: 0;
+  z-index: 99;
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  transform: translateY(-100px);
   width: 100vw;
+  pointer-events: none;
 }
 
 .grid {
@@ -57,14 +57,20 @@ body {
   grid-template-columns: 50px 1fr 50px;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   background: #313131;
+  background-color: rgba(255, 255, 255, .15);
+  backdrop-filter: blur(10px);
+  
   gap: 20px;
   color: white;
+  border-radius: 0px 0px 8px 8px;
+  z-index: 100;
 }
 
 .menu.active {
-  top: 0px;
-  transition: all 0.5s ease;
-  z-index: 99;
+  /*transition: all 0.5s ease;*/
+  transform: translateY(0px);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .navbar__toggle .bar{
@@ -73,9 +79,8 @@ body {
   width: 25px;
   height: 3px;
   margin: 5px auto;
-  transition: all 0.5s ease-in-out;
+  transition: all 150ms ease-in-out;
   background: white;
-
 }
 
 #mobile-menu {
@@ -83,6 +88,7 @@ body {
   top: 22px;
   right: 30px;
   z-index: 100;
+  cursor: pointer;
 }
 
 #mobile-menu.is-active .bar:nth-child(2) {

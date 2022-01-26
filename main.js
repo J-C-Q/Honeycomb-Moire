@@ -218,11 +218,107 @@ function rotate(pointss,phi) {
 
 function numberToColor(n) {
   switch (n) {
-    case 0: return 'rgb(0,0,0)';
-    case 1: return 'rgb(255,255,0)';
-    case 2: return 'rgb(255,20,147)';
-    case 3: return 'rgb(0,191,255)';
-    default: return 'rgb(255,255,255)';
+    case 0: return '#000000';
+    case 1: return '#FFFF74';
+    case 2: return '#FF9BFF';
+    case 3: return '#00D3FF';
+    case 4: return '#E2630D';
+    case 5: return '#007E00';
+    case 6: return '#0050E6';
+    case 7: return '#AC0047';
+    case 8: return '#00FFC8';
+    case 9: return '#006468';
+    case 10: return '#FFD5C4';
+    case 11: return '#6C5200';
+    case 12: return '#7A7581';
+    case 13: return '#44005C';
+    case 14: return '#9E9E77';
+    case 15: return '#FF5C78';
+    case 16: return '#8197F1';
+    case 17: return '#003200';
+    case 18: return '#C721DD';
+    case 19: return '#FFAD07';
+    case 20: return '#611C00';
+    case 21: return '#F3FFFA';
+    case 22: return '#009E88';
+    case 23: return '#5EC700';
+    case 24: return '#002D54';
+    case 25: return '#553C4A';
+    case 26: return '#444439';
+    case 27: return '#008FB6';
+    case 28: return '#CFD4FD';
+    case 29: return '#C40000';
+    case 30: return '#A4675C';
+    case 31: return '#BB8FA8';
+    case 32: return '#290001';
+    case 33: return '#A78600';
+    case 34: return '#002D30';
+    case 35: return '#C7DEAA';
+    case 36: return '#8D9FA3';
+    case 37: return '#6F5B95';
+    case 38: return '#A1FFFF';
+    case 39: return '#B39688';
+    case 40: return '#4E6D50';
+    case 41: return '#FF977B';
+    case 42: return '#FFD1EC';
+    case 43: return '#9E5100';
+    case 44: return '#AE5B8E';
+    case 45: return '#799400';
+    case 46: return '#362200';
+    case 47: return '#0E0026';
+    case 48: return '#80765F';
+    case 49: return '#485C00';
+    case 50: return '#C8C2B5';
+    case 51: return '#8800A1';
+    case 52: return '#00A853';
+    case 53: return '#FFE1AA';
+    case 54: return '#674F42';
+    case 55: return '#FF342D';
+    case 56: return '#6B0041';
+    case 57: return '#0806B1';
+    case 58: return '#986DFF';
+    case 59: return '#FF4EC7';
+    case 60: return '#8AB9A2';
+    case 61: return '#2EFF71';
+    case 62: return '#005577';
+    case 63: return '#0078E3';
+    case 64: return '#B2ADB9';
+    case 65: return '#00C3C6';
+    case 66: return '#00AEFF';
+    case 67: return '#4E545F';
+    case 68: return '#FF9BB0';
+    case 69: return '#FED206';
+    case 70: return '#687B7A';
+    case 71: return '#B1DCFC';
+    case 72: return '#FFF6FF';
+    case 73: return '#620019';
+    case 74: return '#C79253';
+    case 75: return '#A891CF';
+    case 76: return '#EF007A';
+    case 77: return '#B8CE00';
+    case 78: return '#001700';
+    case 79: return '#204B39';
+    case 80: return '#875866';
+    case 81: return '#B5FF4E';
+    case 82: return '#B40080';
+    case 83: return '#853F34';
+    case 84: return '#69936B';
+    case 85: return '#FFBC80';
+    case 86: return '#4C3779';
+    case 87: return '#323606';
+    case 88: return '#008E94';
+    case 89: return '#CAAC51';
+    case 90: return '#787B3B';
+    case 91: return '#B6F9D9';
+    case 92: return '#DA003F';
+    case 93: return '#2E2124';
+    case 94: return '#005815';
+    case 95: return '#FF8E1D';
+    case 96: return '#6674B1';
+    case 97: return '#00CDAD';
+    case 98: return '#007F63';
+    case 99: return '#996F3D';
+    default: return '#FFFFFF';
   }
 }
 
@@ -263,7 +359,7 @@ var sites1 = getPointsFromStructure(Layer1);
 var sites2 = [...sites1];
 
 
-var colors = siteColors(sites1,sites2,1,0.2,0.003);
+var colors = siteColors(sites1,sites2,1,0.177,0.003);
 var color1 = colors.colors1;
 var color2 = colors.colors2;
 
@@ -383,28 +479,33 @@ slider.oninput = function() {
 
 function initialize() {
   N = parseInt(N_input.value)
-  Layer1 = constructStructure(N);
 
-  sites1 = getPointsFromStructure(Layer1);
-  sites2 = [...sites1];
+  if (N<=50) {
+    Layer1 = constructStructure(N);
 
-  var l = slider.value;
-  let phi = l*Math.PI/3600;
-  chart.data.datasets[0].data = rotate(sites1,phi);
-  chart.data.datasets[1].data = rotate(sites2,-phi);
-  colors = siteColors(chart.data.datasets[0].data,chart.data.datasets[1].data,parseFloat(L_input.value),parseFloat(p_input.value),parseFloat(delta_input.value));
-  color1 = colors.colors1;
-  color2 = colors.colors2;
-  chart.data.datasets[0].backgroundColor = colors.colors1;
-  chart.data.datasets[1].backgroundColor = colors.colors2;
-  chart.options.scales.x.min = -Math.sqrt(3)*N;
-  chart.options.scales.x.max = Math.sqrt(3)*N;
-  chart.options.scales.y.min = -Math.sqrt(3)*N;
-  chart.options.scales.y.max = Math.sqrt(3)*N;
-  menu.classList.toggle('is-active');
-  menuLinks.classList.toggle('active');
-  chart.options.pointRadius = parseFloat(pointsize_input.value);
-  chart.update('none');
+    sites1 = getPointsFromStructure(Layer1);
+    sites2 = [...sites1];
+
+    var l = slider.value;
+    let phi = l*Math.PI/3600;
+    chart.data.datasets[0].data = rotate(sites1,phi);
+    chart.data.datasets[1].data = rotate(sites2,-phi);
+    colors = siteColors(chart.data.datasets[0].data,chart.data.datasets[1].data,parseFloat(L_input.value),parseFloat(p_input.value),parseFloat(delta_input.value));
+    color1 = colors.colors1;
+    color2 = colors.colors2;
+    chart.data.datasets[0].backgroundColor = colors.colors1;
+    chart.data.datasets[1].backgroundColor = colors.colors2;
+    chart.options.scales.x.min = -Math.sqrt(3)*N;
+    chart.options.scales.x.max = Math.sqrt(3)*N;
+    chart.options.scales.y.min = -Math.sqrt(3)*N;
+    chart.options.scales.y.max = Math.sqrt(3)*N;
+    menu.classList.toggle('is-active');
+    menuLinks.classList.toggle('active');
+    chart.options.pointRadius = parseFloat(pointsize_input.value);
+    chart.update('none');
+  } else {
+    alert("Parameters could not be applied!");
+  }
 }
 
 
