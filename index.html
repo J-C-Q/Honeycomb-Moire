@@ -13,31 +13,57 @@
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
   </script>
-
+  <link rel="shortcut icon" href="http://sstatic.net/stackoverflow/img/favicon.ico">
 </head>
 <body>
-  <div class="slideshow-container">
-    <div class="container">
-      <div class="header">
-        Honeycomb Moiré
-      </div>
-      <div class="content-large">
-        <canvas id="myChart"></canvas>
-      </div>
+  <div class="navbar__toggle" id="mobile-menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </div>
+  <div class="menu" id="menue">
+    <div class="grid">
+      <label for="N" id="labelN">$n=$</label>
+      <input type="text" name="N" id="N" value="10"> 
 
-      <div class="back"></div>
+      <label for="L" id="labelL">$d=$</label>
+      <input type="text" name="L" id="L" value="1"> 
 
-      <div class="footer">
-        <div class="subfooderslider">
-          <input type="range" min="0" max="100" value="0" id="myRange" class="slider">
-        </div>
-        <div class="subfoodervalue">
-          <p>$\theta=$ <span id="value"></span>°</p>
-        </div>
-      </div>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script src="main.js"></script> 
+      <label for="p" id="labelp">$\gamma=$</label>
+      <input type="text" name="p" id="p" value="0.2">
+
+      <label for="delta" id="labeldelta">$\delta=$</label>
+      <input type="text" name="delta" id="delta" value="0.003"> 
+
+      <label for="pointsize" id="labelpointsize">p.s.</label>
+      <input type="text" name="pointsize" id="pointsize" value="2"> 
+      
+      <button class="save" onclick="initialize()">Save</button>
     </div>
+  </div>
+  <div class="container">
+    <div class="header">
+      
+      Honeycomb Moiré
+      
+      
+    </div>
+    <div class="content-large">
+      <canvas id="myChart"></canvas>
+    </div>
+
+    <div class="back"></div>
+
+    <div class="footer">
+      <div class="subfooderslider">
+        <input type="range" min="0" max="600" value="0" id="myRange" class="slider">
+      </div>
+      <div class="subfoodervalue">
+        <p>$\theta=$ <span id="value"></span>°</p>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="main.js"></script> 
   </div>
 </body>
 </html>

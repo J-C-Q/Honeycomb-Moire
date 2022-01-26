@@ -4,6 +4,7 @@ class Atom {
     this.x = 0;
     this.y = 0;
     this.c = new Array(3);
+    this.c2 = [];
   }
 }
 
@@ -94,7 +95,6 @@ function arrayRotate(arr, reverse) {
 
 
 function constructStructure(n) {
-
   var atoms = new Array(6*Math.pow(n,2) + 6*n+1);
   for (var i=0;i<atoms.length;i++) {
     atoms[i] = new Atom();
@@ -137,9 +137,14 @@ function constructStructure(n) {
     currentPos = translationFunction(currentPos,Math.ceil(k/2),k);
     k += 1;
   }
-  
+  var lastToNext;
   for (var layer=2; layer<=n;layer++) {
-    var lastToNext = thisLayercP.indexOf(0);
+
+    lastToNext = [];
+    for (var i = 0; i < thisLayercP.length; i++) {
+      if (thisLayercP[i] == 0) lastToNext.push(i+i_start-1);
+    }
+    lastToNext = arrayRotate(lastToNext);
     var lastLayercP = [...thisLayercP];
     currentPos = newLayerTranslation(currentPos);
 
@@ -173,6 +178,22 @@ function constructStructure(n) {
   return atoms;
 }
 
+function connectLayers(layer1,layer2,L,d,cutOff) {
+  var R;
+  var a;
+  for (var i=0;i<layer1.length;i++) {
+    for (var j=0;j<layer2.length;j++) {
+      R = Math.sqrt(Math.pow(layer1[i].x - layer2[j].x,2) + Math.pow(layer1[i].y - layer2[j].y,2) + Math.pow(L,2));
+      a = Math.exp(-R/d);
+      if (Math.abs(a)>cutOff) {
+        layer1[i].c2.push(j);
+        layer2[j].c2.push(i);
+      }
+    }
+  }
+  return {layer1,layer2};
+}
+
 function getPointsFromStructure(atomss) {
   var points = new Array(atomss.length)
   for (var i=0; i<atomss.length;i++) {
@@ -194,12 +215,79 @@ function rotate(pointss,phi) {
   return newpoints;
 }
 
-var N = 50
-var sites = getPointsFromStructure(constructStructure(N));
+
+function numberToColor(n) {
+  switch (n) {
+    case 0: return 'rgb(0,0,0)';
+    case 1: return 'rgb(255,255,0)';
+    case 2: return 'rgb(255,20,147)';
+    case 3: return 'rgb(0,191,255)';
+    default: return 'rgb(255,255,255)';
+  }
+}
+
+function siteColors(sites1,sites2,L,d,cutOff) {
+  var colors1 = new Array(sites1.length);
+  var colors2 = new Array(sites2.length);
+  var counts1 = new Array(sites1.length);
+  var counts2 = new Array(sites2.length);
+  var R;
+  var a;
+  for (var i=0;i<sites1.length;i++) {
+    counts1[i] = 0;
+    counts2[i] = 0;
+  }
+ 
+
+  for (var i=0;i<sites1.length;i++) {
+    for (var j=0;j<sites2.length;j++) {
+      R = Math.sqrt(Math.pow(sites1[i].x - sites2[j].x,2) + Math.pow(sites1[i].y - sites2[j].y,2) + Math.pow(L,2));
+      a = Math.exp(-R/d);
+      if (Math.abs(a) > cutOff) {
+        counts1[i]+=1;
+        counts2[j]+=1;
+      }
+    }
+  }
+  for (var i=0;i<sites1.length;i++) {
+    colors1[i] = numberToColor(counts1[i]);
+    colors2[i] = numberToColor(counts2[i]);
+  }
+  return {colors1,colors2};
+}
+
+var N = 10
+var Layer1 = constructStructure(N);
+
+var sites1 = getPointsFromStructure(Layer1);
+var sites2 = [...sites1];
+
+
+var colors = siteColors(sites1,sites2,1,0.2,0.003);
+var color1 = colors.colors1;
+var color2 = colors.colors2;
 
 
 var slider = document.getElementById("myRange");
 var output = document.getElementById("value");
+
+var N_input = document.getElementById("N");
+var L_input = document.getElementById("L");
+var p_input = document.getElementById("p");
+var delta_input = document.getElementById("delta");
+var pointsize_input = document.getElementById("pointsize");
+
+var menu = document.getElementById("mobile-menu");
+var menuLinks = document.getElementById("menue");
+
+mobileMenu = () => {
+  menu.classList.toggle('is-active');
+  menuLinks.classList.toggle('active');
+}
+
+menu.addEventListener('click',mobileMenu);
+
+
 output.innerHTML = slider.value;
 
 var ctx = document.getElementById('myChart').getContext('2d');
@@ -208,15 +296,13 @@ var chart = new Chart(ctx, {
   data: {
     datasets: [{
       label: '',
-      backgroundColor: '#FF652F',
-      borderColor: '#FF652F',
-      data: sites,
+      backgroundColor: color1,
+      data: sites1,
     },
     {
       label: '',
-      backgroundColor: '#0000FF',
-      borderColor: '#0000FF',
-      data: sites,
+      backgroundColor: color2,
+      data: sites2,
     }]
   },
   options: {
@@ -283,13 +369,41 @@ var chart = new Chart(ctx, {
 });
 
 slider.oninput = function() {
-  output.innerHTML = this.value*60/100;
+  output.innerHTML = this.value*60/600;
   var l = slider.value;
-  //var color = 'rgb(214,214,214)';//'linear-gradient(90deg,rgb(0,0,117)'+l+'%, rgb(214,214,214)'+l+'%)';
-  //slider.style.background=color;
-  let phi = l*Math.PI/600;
-  chart.data.datasets[0].data = rotate(sites,phi);
-  chart.data.datasets[1].data = rotate(sites,-phi);
+  let phi = l*Math.PI/3600;
+  chart.data.datasets[0].data = rotate(sites1,phi);
+  chart.data.datasets[1].data = rotate(sites2,-phi);
+  colors = siteColors(chart.data.datasets[0].data,chart.data.datasets[1].data,parseFloat(L_input.value),parseFloat(p_input.value),parseFloat(delta_input.value));
+  chart.data.datasets[0].backgroundColor = colors.colors1;
+  chart.data.datasets[1].backgroundColor = colors.colors2;
+
+  chart.update('none');
+}
+
+function initialize() {
+  N = parseInt(N_input.value)
+  Layer1 = constructStructure(N);
+
+  sites1 = getPointsFromStructure(Layer1);
+  sites2 = [...sites1];
+
+  var l = slider.value;
+  let phi = l*Math.PI/3600;
+  chart.data.datasets[0].data = rotate(sites1,phi);
+  chart.data.datasets[1].data = rotate(sites2,-phi);
+  colors = siteColors(chart.data.datasets[0].data,chart.data.datasets[1].data,parseFloat(L_input.value),parseFloat(p_input.value),parseFloat(delta_input.value));
+  color1 = colors.colors1;
+  color2 = colors.colors2;
+  chart.data.datasets[0].backgroundColor = colors.colors1;
+  chart.data.datasets[1].backgroundColor = colors.colors2;
+  chart.options.scales.x.min = -Math.sqrt(3)*N;
+  chart.options.scales.x.max = Math.sqrt(3)*N;
+  chart.options.scales.y.min = -Math.sqrt(3)*N;
+  chart.options.scales.y.max = Math.sqrt(3)*N;
+  menu.classList.toggle('is-active');
+  menuLinks.classList.toggle('active');
+  chart.options.pointRadius = parseFloat(pointsize_input.value);
   chart.update('none');
 }
 
